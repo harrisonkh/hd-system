@@ -1,0 +1,16 @@
+{
+  "name": "hairdresser-management",
+  "version": "0.0.1",
+  "description": "An integrated information system providing the user with client and financial data storage/retrieval capabilities",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Harrison Kusevskis-Hayes",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "fs": "0.0.2",
+    "sqlite3": "^3.1.4"
+  }
+}
