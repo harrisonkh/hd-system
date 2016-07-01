@@ -3,13 +3,13 @@
 <link rel="stylesheet" href="./login.css">
 </head>
 <body>
-<form action="/login" method="post">
+<form id="login" action="/login" method="post">
 Username:<input type="text" name="username" id="username" title="username"><br/>
 
 Password:<input type="password" name="password" id="password" title="password">
 <button type="button" id="submit" class="button">login</button>
 <script type="text/javascript">
-	function post(path, params, method) {
+function post(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.
 
     // The rest of this code assumes you are not using a library.
@@ -33,29 +33,9 @@ Password:<input type="password" name="password" id="password" title="password">
     form.submit();
 }
 document.getElementById('submit').onclick = function() {
-post('/login', {username: document.getElementById('username').value, password: document.getElementById('password').value});
-app.post('/login', function(req,res){
- console.log(req.body.username);
- console.log(req.body.password);
-
-
-db.serialize(function() {
-	db.each("SELECT password FROM user WHERE name='" + req.body.usernmame + "'", function(err, row) {
-  });
-  
-});
-
-// Encrypt 
-var ciphertext = CryptoJS.AES.encrypt("password", SECRET_KEY).toString();
-
-
-console.log(ciphertext);
-console.log(CryptoJS.AES.encrypt("password",SECRET_KEY).toString());
-});
-app.get('/',function(req,res){
-	res.sendFile(__dirname + '/login.html');
-});
+ post('/login', {username: document.getElementById('username').value, password: document.getElementById('password').value});
 }
+
 
 </script>
 </form>
