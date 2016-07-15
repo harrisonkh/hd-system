@@ -11,41 +11,93 @@ var atob = require('atob');
 
 app.use(express.static(__dirname + '/public'));
 
+
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
+	extended: true
 })); 
 
 
 
 app.post('/login', function(req,res){
-console.log(req);
-var username = req.body.username;
-var pass = req.body.password;
-console.log(username);
-console.log(pass);
+	console.log(req);
+	var username = req.body.username;
+	var pass = req.body.password;
+	console.log(username);
+	console.log(pass);
 
-db.serialize(function() {
-	db.each("SELECT password FROM user WHERE name='" + username + "'", function(err, row) {
-		var dbPass =decrypt(row.Password,SECRET_KEY);
-		console.log("DB Pass :",dbPass);
-		if (pass == dbPass){
-			res.sendFile(__dirname + "/main.html");
-		}else{
-			res.end("INCORRECT");
-		}
-  });
-  
-});
+	db.serialize(function() {
+		db.each("SELECT password FROM user WHERE name='" + username + "'", function(err, row) {
+			var dbPass =decrypt(row.Password,SECRET_KEY);
+			console.log("DB Pass :",dbPass);
+			if (pass == dbPass){
+				res.sendFile(__dirname + "/main.html");
+			}else{
+				res.end("INCORRECT");
+			}
+		});
 
-// Encrypt 
+	}); 
 });
 app.get('/',function(req,res){
 	res.sendFile(__dirname + '/login.html');
 });
-
+app.get('/addcust',function(req,res){
+	console.log(req);
+	var fname = req.query.fname;
+	var lname =  req.query.lname;
+	var mobnum =  req.query.mobnum;
+	var landline =  req.query.landline;
+	var email =  req.query.email;
+	db.serialize(function(){
+		db.run("INSERT INTO Customers (FName, LName, MobNum, Email, LanNum) VALUES ('" + fname + "','" + lname + "','" + mobnum + "','" + email + "','" + landline + "')", 
+			function(err){
+				if (!err){
+					res.end('success');
+				}else{
+					console.log(err);
+				}
+			});
+	});
+});
+app.get('/addtrans',function(req,res){
+	console.log(req);
+	var amount = req.query.amount;
+	var date =  req.query.date;
+	var day =  req.query.day;
+	var custID =  req.query.custID;
+	db.serialize(function(){
+		db.run("INSERT INTO Transactions (Amount, Date, Day, CustID) VALUES (" + amount + ",'" + date + "','" + day + "','" + custID + "')", 
+			function(err){
+				if (!err){
+					res.end('success');
+				}else{
+					console.log(err);
+				}
+			});
+	});
+});
+app.get('/recent',function(req,res){
+	db.serialize(function(){
+		var transactions =[];
+		db.each("SELECT * FROM Transactions ORDER BY date DESC LIMIT 10", function(err,row){
+			transactions.push(row);
+		}, function(){res.send(transactions);});
+	})
+});
+app.get('/statistics',function(req,res){
+	
+});
+app.get('/customers',function(req,res){
+	db.serialize(function(){
+		var customers =[];
+		db.each("SELECT * FROM Customers", function(err,row){
+			customers.push(row);
+		}, function(){res.send(customers);});
+	})
+});
 app.listen(3000, function () {
-  console.log('Server started on port 3000');
+	console.log('Server started on port 3000');
 });
 
 function encrypt(toEncrypt){
@@ -53,18 +105,18 @@ function encrypt(toEncrypt){
 }
 function decrypt(hash,key){
 
-var decrypted = CryptoJS.AES.decrypt(
-        hash,key,
-        {   
-            mode: CryptoJS.mode.CBC,
-            padding: CryptoJS.pad.Pkcs7
-        }
-    );
-return decrypted.toString(CryptoJS.enc.Utf8);
+	var decrypted = CryptoJS.AES.decrypt(
+		hash,key,
+		{   
+			mode: CryptoJS.mode.CBC,
+			padding: CryptoJS.pad.Pkcs7
+		}
+		);
+	return decrypted.toString(CryptoJS.enc.Utf8);
 }
 function hex2a(hex) {
-    var str = '';
-    for (var i = 0; i < hex.length; i += 2)
-        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    return str;
+	var str = '';
+	for (var i = 0; i < hex.length; i += 2)
+		str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+	return str;
 }

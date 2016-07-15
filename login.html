@@ -3,11 +3,19 @@
 <link rel="stylesheet" href="./login.css">
 </head>
 <body>
+<div class = "border">
 <form id="login" action="/login" method="post">
+<div class = "username">
 Username:<input type="text" name="username" id="username" title="username"><br/>
+</div>
 
+<div class = "password">
 Password:<input type="password" name="password" id="password" title="password">
+</div>
+
+<div class="wrapper">
 <button type="button" id="submit" class="button">login</button>
+</div>
 <script type="text/javascript">
 function post(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.
@@ -38,7 +46,7 @@ document.getElementById('submit').onclick = function() {
 
 
 </script>
+</div>
 </form>
-<p>Sample text</p>
 </body>
 </html>

@@ -7,9 +7,41 @@
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+}
+
+.wrapper {
+    text-align: center;
 }
 
 p {
-	color: red;
+    color: red;
     text-align: center;
+}
+
+.username{
+  text-align:center;
+  position: absolute;
+  top: 40%;
+  left: 34.6%;
+}
+
+.password{
+  text-align:center;
+  position: absolute;
+  top: 50%;
+  left: 35%;
+}
+
+.border {
+    width: 400px;
+    border: 60px solid cyan;
+    padding: 100px;
+    margin: 100px;
+    text-align:center;
+    position: absolute;
+    top: 20%;
+    left: 20%;
 }
