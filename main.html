@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<head>
+	<script src="angular.min.js"></script>
+	<script src="protractor.js"></script>
+	<link rel="stylesheet" href="./login.css">
+</head>
+<body ng-app="hairdresserApp" ng	-controller="mainController">
+<form id="newCust" action="/add" method="get" ng-show="currentView == 'addcust'">
+		first name: <input type="text" id="fname" title="fname">
+		<br/>
+		surname: <input type="text" id="lname" title="lname">
+		<br/>
+		landline: <input type="text" id="landline" title="landline">
+		<br/>
+		mobile: <input type="text" id="mobile" title="mobile">
+		<br/>
+		email: <input type="email" id="email" title="email">
+		<br/>
+		<input type="submit" id="submit" class="button" value="Add">
+		<span id="validate"></span>
+</form>
+<button ng-click="currentView = 'addcust'">Add Customer</button>
+	{{test}}
+	<script type="text/javascript">
+		document.getElementById('submit').onclick = function() {
+			var landline_pattern = /^(\(0[2|3|4|7|8]\))?\d{8}/i;
+			var mob_num_pattern = /^(\+61)?0?\d{9}/i;
+			var name_pattern=/^[a-zA-Z]{2,}/i;
+
+			var landline_entered = document.getElementById("landline").value;
+			var mob_num_entered = document.getElementById("mobile").value;
+			var fname= document.getElementById("fname").value;
+			var lname = document.getElementById("lname").value;
+
+			var errorText = "";
+			if (landline_entered.search(landline_pattern) != 0) {
+				errorText += "invalid landline \n"
+			}
+			if (mob_num_entered.search(mob_num_pattern) != 0) {
+				errorText += "invalid mobile number \n" }
+				if (fname.search(name_pattern) != 0) {
+					errorText += "invalid first name \n"
+				}
+				if (lname.search(name_pattern) != 0) {
+					errorText += "invalid last name \n"
+				}
+				if (errorText === ""){
+
+				}else{
+					document.getElementById("validate").innerText = errorText;
+				}
+
+			}
+		</script>
+	</body>
+	</html>

@@ -1,0 +1,8 @@
+--------API ENDPOINTS-------
+/login -> Login POST
+/addcust -> Add customer (GET)
+/recent -> GET recent transactions
+/query -> GET first/last name, landline #. mobile #, email
+/statistics -> GET daily/weekly average revenue + day with highest revenue
+/customers -> GET customer list
+/addtrans -> add transaction (GET)
