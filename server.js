@@ -9,6 +9,34 @@ var db = new sqlite3.Database(DB_FILE_NAME);
 var btoa = require('btoa');
 var atob = require('atob');
 
+Array.prototype.getAverageField = function(field){
+	var total=0;
+	if (this.length != 0){
+		for (var i =0; i < this.length;i++){
+			total += this[i][field];
+		}
+		return (total/this.length).toFixed(2);
+	}else{
+		return 0;
+	}
+}
+Array.prototype.getAverage = function(){
+	var total=0;
+	if (this.length != 0){
+		for (var i =0; i < this.length;i++){
+			total += this[i];
+		}
+		return (total/this.length).toFixed(2);
+	}else{return 0;}
+}
+Array.prototype.getPosMaxVal = function(){
+	var maxPos = 0;
+	for (var i = 0; i< this.length; i++){
+		if (this[i]>this[maxPos])
+			maxPos = i;
+	}
+	return maxPos;
+}
 app.use(express.static(__dirname + '/public'));
 
 
@@ -69,20 +97,18 @@ app.get('/query',function(req,res){
 	var matches = [];
 	var queryString = '';
 	var queryColumn = '';
-	console.log("Unexpected query parameter");
-	if (req.query.fname){
+	if (req.query.qryId === 'fname'){
 		console.log('FName');
 		queryColumn = 'FName';
-		queryString = req.query.fname;
-	}else if(req.query.lname){
+		queryString = req.query.qryText;
+	}else if(req.query.qryId === 'lname'){
 		queryColumn = 'LName';
-		queryString = req.query.lname;
-	}else if (req.query.phone){
-		queryColumn = 'LanNum OR MobNum';
-		queryString = req.query.phone;
-	}else if (req.query.email){
+		queryString = req.query.qryText;
+	}else if (req.query.qryId === 'phone'){
+		queryString = req.query.qryText;
+	}else if (req.query.qryId === 'email'){
 		queryColumn = 'Email';
-		queryString = req.query.email;
+		queryString = req.query.qryText;
 	}else{
 		console.log("Unexpected query parameter")
 		res.send(matches);
@@ -90,20 +116,45 @@ app.get('/query',function(req,res){
 	}
 	console.log(queryString, queryColumn);
 	//const SQL_STATEMENT = 'SELECT * FROM Customers';
-
-	const SQL_STATEMENT = 'SELECT * FROM Customers WHERE ' + queryColumn + ' LIKE \'' + queryString +'%\' ORDER BY FName DESC';
-	db.serialize(function(){
-		db.each(SQL_STATEMENT, function(err,row){
-			if (err) console.log(err);
-			matches.push(row);
-		}, function(){
+	if (req.query.qryId !== 'phone'){ 
+		const SQL_STATEMENT = 'SELECT * FROM Customers WHERE ' + queryColumn + ' LIKE \'' + queryString +'%\' ORDER BY FName DESC';
+		console.log(SQL_STATEMENT);
+		db.serialize(function(){
+			db.each(SQL_STATEMENT, function(err,row){
+				if (err) console.log(err);
+				matches.push(row);
+			}, function(){
 			/*bubbleSort(matches, queryColumn);
 			console.log("Sort complete: ",matches);
 			binarySearch(matches, queryColumn, queryString);
 			console.log("Search complete: ", matches);*/
 			res.send(matches);
 		});
-	});
+		});
+	}else{
+		const SQL_STATEMENT = 'SELECT * FROM Customers';
+		console.log(SQL_STATEMENT);
+		db.serialize(function(){
+			db.each(SQL_STATEMENT, function(err,row){
+				if (err) console.log(err);
+				matches.push(row);
+			}, function(){
+				bubbleSort(matches, 'MobNum');
+				console.log("Sort complete: ",matches);
+				var match = binarySearch(matches, 'MobNum', queryString);
+				console.log("Search complete: ", match);
+				if (match == []){
+					bubbleSort(matches, 'LanNum');
+					console.log("Sort complete: ",matches);
+					match = binarySearch(matches, 'LanNum', queryString);
+					console.log("Search complete: ", match);
+					res.send(match);
+				}else{
+					res.send(match);
+				}
+			});
+		});
+	}
 });
 
 app.get('/addtrans',function(req,res){
@@ -133,24 +184,49 @@ app.get('/recent',function(req,res){
 });
 app.get('/statistics',function(req,res){
 	console.log("Statistics requested");
-	const DAYS = ['Monday', 'Tuesday', 'Wednesday','Thursday', 'Friday', 'Saturday', 'Sunday'];
+	const DAYS = ['Sunday','Monday', 'Tuesday', 'Wednesday','Thursday', 'Friday', 'Saturday'];
 	var statistics = {
 		'dailyAverage' : 0.00,
 		'weeklyAverage': [],
-		'daysRevenue': []
+		'daysAverageRevenue': [],
+		'dayHighest':''
 	}
 
 	const SQL_STATEMENT = 'SELECT * FROM Transactions';
-	var dbRows;
+	
+	var dbRows=[];
+	db.serialize(function(){
+		db.each(SQL_STATEMENT, function(err,row){
+			dbRows.push(row);
+		}, function(){
+			statistics.dailyAverage = dbRows.getAverageField('Amount');
+			var weeklyTrans =[[]];
+			createEmptyArrays(weeklyTrans, 52);
+			for(var i =0; i<dbRows.length; i++){
+				var dateFormatted = formatDate(dbRows[i].Date);
+				weeklyTrans[ getWeekOfYear(new Date(dateFormatted)) ].push(dbRows[i].Amount);
+			}
+			console.log(weeklyTrans);
+			for (var i =0; i<weeklyTrans.length; i++){
+				statistics.weeklyAverage.push(weeklyTrans[i].getAverage() == null ? 0 : weeklyTrans[i].getAverage());
+			}
 
-	var startingWeek = 0;
-	var weeklyTrans = new Array[52];
-	for(var i =0; i<dbRows.length; i++){
-		var dateFormatted = formatDate(dbRows[i].Date);
-		weeklyTrans[ getWeekOfYear(dateFormatted) ].push(dbRows[i].Amount);
-	}
+			var dailyTrans = [[]];
+			createEmptyArrays(dailyTrans, 7);
+			for(var i=0; i<dbRows.length; i++) {
+				var dateFormatted = formatDate(dbRows[i].Date);
+				dailyTrans[ new Date(dateFormatted).getDay() ].push(dbRows[i].Amount);
+			}
+			console.log(dailyTrans);
+			for (var i =0; i<dailyTrans.length; i++){
+				statistics.daysAverageRevenue.push(dailyTrans[i].getAverage() == null ? 0 : dailyTrans[i].getAverage());
+			}
+			statistics.dayHighest = DAYS[statistics.daysAverageRevenue.getPosMaxVal()];
+			res.send(statistics);
+		});
+	})
 
-	res.send(statistics);
+	
 });
 app.get('/customers',function(req,res){
 	console.log("customers list requested");
@@ -186,9 +262,14 @@ function hex2a(hex) {
 	return str;
 }
 function bubbleSort(array, field){
-	for (var i=0; i<array.length-1;i++) {
-		if (array[i][field] > array[i+1][field]) {
-			swap(array, i, i+1);
+	swapped = true;
+	while (swapped){
+		swapped = false;
+		for (var i=0; i<array.length-1;i++) {
+			if (array[i][field] > array[i+1][field]) {
+				swap(array, i, i+1);
+				swapped = true;
+			}
 		}
 	}
 
@@ -201,21 +282,20 @@ function swap(array, index1, index2){
 function binarySearch(array, field, value){
 	var found=false;
 	var length = array.length-1;
+	var lastPos;
 	var position = Math.floor(length/2);
-	var matches = [];
-	while (!found) {
+	while (lastPos != position) {
 		if (value < array[position][field]) {
+			lastPos = position;
 			position = Math.floor(position/2);
 		}else if (value > array[position][field])  {
-			position = length-Math.floor(position/2);
-		}else if (array[position][field].startsWith(value)){
-			//found = true;
-			matches.push(position);
-		}else{
-			found = true;
-			return -1;
+			lastPos = position;
+			position = lastPos + Math.floor((length - position)/2);
+		}else if (array[position][field] === (value)){
+			return array[position];
 		}
 	}
+	return [];
 }
 function getWeekOfYear(date){
 	var dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
@@ -225,4 +305,17 @@ function getWeekOfYear(date){
 	var week = Math.floor((dayCount[month]+dayOfMonth)/7);
 
 	return week;
+}
+function formatDate(date){
+	var pattern = /(\d.?)\/(\d.?)\/(\d{4})/i;
+	var match = date.match(pattern);
+	var day = match[1];
+	var month = match[2];
+	var year = match[3];
+	return month + '/' + day + '/' + year;
+}
+function createEmptyArrays(array, count){
+	for (var i =0; i<(count); i++){
+		array[i] = [];
+	}
 }
