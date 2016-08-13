@@ -1,74 +1,77 @@
 <!DOCTYPE html>
 <head>
-	<script src="angular.min.js"></script>
-	<script src="protractor.js"></script>
-	<link rel="stylesheet" href="./login.css">
+  <script src="angular.min.js"></script>
+  <script src="protractor.js"></script>
+  <!--https://cdnjs.cloudflare.com/ajax/libs/angular-nvd3/1.0.8/angular-nvd3.min.js-->
+  <link rel="stylesheet" href="./login.css">
+  <script src="angular-vis.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.js"></script>
 </head>
 <body ng-app="hairdresserApp" ng-controller="mainController">
-	<script src="//visjs.org/dist/vis.js"></script>
-	<script src="visgraph.js"></script>
-	<!-- nav bar at top of page -->
-	<div id="navbar">
-		<ul class="navbarItems">
-			<li id="current" ng-click="setCurrentPage('home'); refreshRecent()"><h2>Home</h2></li>
-			<li ng-click="setCurrentPage('search')"><h2>Search</h2></li>
-			<li ng-click="setCurrentPage('statistics'); getStats()"><h2>Statistics</h2></li>
-			<li ng-click="setCurrentPage('customers'); refreshCustomers()"><h2>Customers</h2></li>
-		</ul>
-	</div>
-	<div ng-show="userAlert.shown" id="msgbox">
-		{{userAlert.text}}
-		<button ng-click="userAlert.shown = false">Ok</button>
-	</div>
-	<div id="container">
-		<div id="home" ng-show="currentPage == 'home'" >
-			<ul>
-				<li ng-repeat="trans in recentTrans">{{recentTransFormatted(trans)}}</li>
+
+  <!-- nav bar at top of page -->
+  <div id="navbar">
+    <ul class="navbarItems">
+      <li id="current" ng-click="setCurrentPage('home'); refreshRecent()"><h2>Home</h2></li>
+      <li ng-click="setCurrentPage('search')"><h2>Search</h2></li>
+      <li ng-click="setCurrentPage('statistics'); getStats()"><h2>Statistics</h2></li>
+      <li ng-click="setCurrentPage('customers'); refreshCustomers()"><h2>Customers</h2></li>
+    </ul>
+  </div>
+  <div ng-show="userAlert.shown" id="msgbox">
+    {{userAlert.text}}
+    <button ng-click="userAlert.shown = false">Ok</button>
+  </div>
+  <div id="container">
+    <div id="home" ng-show="currentPage == 'home'" >
+      <ul>
+        <li ng-repeat="trans in recentTrans">{{recentTransFormatted(trans)}}</li>
 
 
-			</ul>
+      </ul>
 
-		</div>
-		<div id="search" ng-show="currentPage=='search'" >
-			<form id="queryCust" ng-submit="performQuery(queryId, queryText)" method="get">
-				<h1>query: </h1><input type="text" ng-model=queryText id="{{queryId}}" name="{{queryId}}" title="query">
-				<input type="submit" id="querysubmit" class="button" value="Search">
-				<select ng-model="selectedItem" ng-change="setQueryId(selectedItem)">
-					<option value="fname">First Name</option>
-					<option value="lname">Last Name</option>
-					<option value="phone">Phone Number</option>
-					<option value="email">Email</option>
-				</select>	
-			</form>
-			<ul>
-				<li ng-repeat="customer in searchResults">{{customerFormatted(customer)}}</li>
-			</ul>
-		</div>
-		<div id="customers" ng-show="currentPage == 'customers'">
-			<ul>
-				<li ng-repeat="customer in customers">{{customerFormatted(customer)}}<button>Edit</button></li>
-			</ul>
+    </div>
+    <div id="search" ng-show="currentPage=='search'" >
+      <form id="queryCust" ng-submit="performQuery(queryId, queryText)" method="get">
+        <h1>query: </h1><input type="text" ng-model=queryText id="{{queryId}}" name="{{queryId}}" title="query">
+        <input type="submit" id="querysubmit" class="button" value="Search">
+        <select ng-model="selectedItem" ng-change="setQueryId(selectedItem)">
+          <option value="fname">First Name</option>
+          <option value="lname">Last Name</option>
+          <option value="phone">Phone Number</option>
+          <option value="email">Email</option>
+        </select>
+      </form>
+      <div id="customerHolder" ng-repeat="customer in searchResults">
+        <span id="customerName">{{customer.Fname}}</span>
+      </div>
 
-			<form id="newCust" ng-submit="addCustomer(fname,lname,landline,mobile,email)" method="get" ng-show="currentView == 'addcust'">
-				first name: <input type="text" ng-model="fname" title="fname">
-				<br/>
-				surname: <input type="text" ng-model="lname" title="lname">
-				<br/>
-				landline: <input type="text" ng-model="landline" title="landline">
-				<br/>
-				mobile: <input type="text" ng-model="mobile" title="mobile">
-				<br/>
-				email: <input type="email" ng-model="email" title="email">
-				<br/>
-				<input type="submit" id="submitcustomer" class="button" value="Add">
-				<span id="validate"></span>
-			</form>
-			<button ng-click="currentView = 'addcust'">Add Customer</button>
-		</div>
+    </div>
+    <div id="customers" ng-show="currentPage == 'customers'">
+      <ul>
+        <li ng-repeat="customer in customers">{{customerFormatted(customer)}}<button>Edit</button></li>
+      </ul>
 
-		<div id="statistics" ng-show="currentPage == 'statistics'">
-		<div id="graph" vis-graph data="graph.data" options="graph.options" event="select" callback="" style="width: 100%; height: 200px"></div>
-		</div>
-	</div>
+      <form id="newCust" ng-submit="addCustomer(fname,lname,landline,mobile,email)" method="get" ng-show="currentView == 'addcust'">
+        first name: <input type="text" ng-model="fname" title="fname">
+        <br/>
+        surname: <input type="text" ng-model="lname" title="lname">
+        <br/>
+        landline: <input type="text" ng-model="landline" title="landline">
+        <br/>
+        mobile: <input type="text" ng-model="mobile" title="mobile">
+        <br/>
+        email: <input type="email" ng-model="email" title="email">
+        <br/>
+        <input type="submit" id="submitcustomer" class="button" value="Add">
+        <span id="validate"></span>
+      </form>
+      <button ng-click="currentView = 'addcust'">Add Customer</button>
+    </div>
+
+    <div id="statistics" ng-show="currentPage == 'statistics'">
+      <vis-graph2d ng-show="graphLoaded" data="graphData" options="graphOptions" events="graphEvents"></vis-graph2d>
+    </div>
+  </div>
 </body>
 </html>

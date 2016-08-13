@@ -1,6 +1,5 @@
-var app = angular.module('hairdresserApp', []);
-var app2 = angular.module('app.visgraph', ['angular.visgraph']);
-app.controller('mainController', function($scope, $http) {
+var app = angular.module('hairdresserApp', ['ngVis']);
+app.controller('mainController', function($scope, $http, VisDataSet) {
 	$scope.currentPage= 'home';
 	$scope.graph ={
 		'data':[],
@@ -16,6 +15,27 @@ app.controller('mainController', function($scope, $http) {
         end: '2014-06-18'
     }
 }
+var dataGroups = new VisDataSet();
+dataGroups.add({});
+var dataItems = new VisDataSet();
+dataItems.add([{}]);
+dataItems.add([
+                {x: '2014-06-12', y: 0},
+                {x: '2014-06-13', y: 40},
+                {x: '2014-06-14', y: 10},
+                {x: '2014-06-15', y: 15},
+                {x: '2014-06-15', y: 30},
+                {x: '2014-06-17', y: 10},
+                {x: '2014-06-18', y: 15},
+                {x: '2014-06-19', y: 52},
+                {x: '2014-06-20', y: 10},
+                {x: '2014-06-21', y: 20}
+            ]);
+$scope.graphData = {
+  items: dataItems,
+  groups: dataGroups
+};
+
 $scope.queryId = '';
 $scope.userAlert = {
 	'shown': false,
@@ -37,7 +57,7 @@ $scope.setCurrentPage = function(pageName) {
 $scope.performQuery = (qryId,qryText)=>{
 	console.log(qryId, qryText);
 	$http({
-		url: '/query', 
+		url: '/query',
 		method: "GET",
 		params: {qryId,qryText}
 	})
@@ -71,7 +91,7 @@ $scope.addCustomer = function(fname,lname,landline,mobile,email) {
 	}
 	if (errorText === ""){
 		$http({
-			url: '/addcust', 
+			url: '/addcust',
 			method: "GET",
 			params: {fname, lname,landline,mobile,email}
 		})
@@ -86,7 +106,7 @@ $scope.addCustomer = function(fname,lname,landline,mobile,email) {
 		document.getElementById("validate").innerText = errorText;
 	}
 }
-$scope.refreshCustomers = function() {	
+$scope.refreshCustomers = function() {
 	$http.get('/customers')
 	.then(function(response) {
 		$scope.customers = response.data;
