@@ -4,26 +4,25 @@
   <script src="protractor.js"></script>
   <!--https://cdnjs.cloudflare.com/ajax/libs/angular-nvd3/1.0.8/angular-nvd3.min.js-->
   <link rel="stylesheet" href="./login.css">
-  <script src="angular-vis.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.bundle.min.js"></script>
+  <script src="angular-chart.min.js"></script>
+
+
 </head>
 <body ng-app="hairdresserApp" ng-controller="mainController">
-
+<title>{{currentPage}}</title>
   <!-- nav bar at top of page -->
   <div id="navbar">
     <ul class="navbarItems">
-      <li id="current" ng-click="setCurrentPage('home'); refreshRecent()"><h2>Home</h2></li>
-      <li ng-click="setCurrentPage('search')"><h2>Search</h2></li>
-      <li ng-click="setCurrentPage('statistics'); getStats()"><h2>Statistics</h2></li>
-      <li ng-click="setCurrentPage('customers'); refreshCustomers()"><h2>Customers</h2></li>
+      <li id="current" ng-click="setCurrentPage('Home'); refreshRecent()"><h2>Home</h2></li>
+      <li ng-click="setCurrentPage('Search')"><h2>Search</h2></li>
+      <li ng-click="setCurrentPage('Statistics'); getStats()"><h2>Statistics</h2></li>
+      <li ng-click="setCurrentPage('Customers'); refreshCustomers()"><h2>Customers</h2></li>
     </ul>
   </div>
-  <div ng-show="userAlert.shown" id="msgbox">
-    {{userAlert.text}}
-    <button ng-click="userAlert.shown = false">Ok</button>
-  </div>
+
   <div id="container">
-    <div id="home" ng-show="currentPage == 'home'" >
+    <div id="home" ng-show="currentPage == 'Home'" >
       <ul>
         <li ng-repeat="trans in recentTrans">{{recentTransFormatted(trans)}}</li>
 
@@ -31,9 +30,9 @@
       </ul>
 
     </div>
-    <div id="search" ng-show="currentPage=='search'" >
+    <div id="search" ng-show="currentPage=='Search'" >
       <form id="queryCust" ng-submit="performQuery(queryId, queryText)" method="get">
-        <h1>query: </h1><input type="text" ng-model=queryText id="{{queryId}}" name="{{queryId}}" title="query">
+        <h1>Query: </h1><input type="text" ng-model=queryText id="{{queryId}}" name="{{queryId}}" title="query">
         <input type="submit" id="querysubmit" class="button" value="Search">
         <select ng-model="selectedItem" ng-change="setQueryId(selectedItem)">
           <option value="fname">First Name</option>
@@ -47,31 +46,57 @@
       </div>
 
     </div>
-    <div id="customers" ng-show="currentPage == 'customers'">
+    <div id="customers" ng-show="currentPage == 'Customers'">
       <ul>
         <li ng-repeat="customer in customers">{{customerFormatted(customer)}}<button>Edit</button></li>
       </ul>
-
-      <form id="newCust" ng-submit="addCustomer(fname,lname,landline,mobile,email)" method="get" ng-show="currentView == 'addcust'">
-        first name: <input type="text" ng-model="fname" title="fname">
+      <div id="newCustForm" ng-show="currentView == 'addcust'">
+      <h2>New Customer</h2>
+      <form id="newCust" ng-submit="addCustomer(fname,lname,landline,mobile,email)" method="get" >
+        <Label>First name</Label> <input type="text" ng-model="fname" title="fname">
         <br/>
-        surname: <input type="text" ng-model="lname" title="lname">
+        <Label>Surname</Label> <input type="text" ng-model="lname" title="lname">
         <br/>
-        landline: <input type="text" ng-model="landline" title="landline">
+        <Label>Landline</Label> <input type="text" ng-model="landline" title="landline">
         <br/>
-        mobile: <input type="text" ng-model="mobile" title="mobile">
+        <Label>Mobile</Label> <input type="text" ng-model="mobile" title="mobile">
         <br/>
-        email: <input type="email" ng-model="email" title="email">
+        <Label>Email</Label> <input type="email" ng-model="email" title="email">
         <br/>
-        <input type="submit" id="submitcustomer" class="button" value="Add">
         <span id="validate"></span>
+         <input type="submit" id="submitcustomer" class="button" value="Add" style="position: relative;top:50px;
+    margin: 0;
+    left: 0;">
+        <button id="cancelcustomer" class="button" ng-click="currentView = ''" value="Cancel" style="bottom:10px;
+    margin: 0;
+    left: 0;">Cancel</button>
       </form>
-      <button ng-click="currentView = 'addcust'">Add Customer</button>
+      </div>
+      <button ng-show="currentView != 'addcust'" ng-click="currentView = 'addcust'">Add Customer</button>
     </div>
 
-    <div id="statistics" ng-show="currentPage == 'statistics'">
-      <vis-graph2d ng-show="graphLoaded" data="graphData" options="graphOptions" events="graphEvents"></vis-graph2d>
-    </div>
+    <div id="statistics" ng-show="currentPage == 'Statistics'">
+      <div id="fixedHolder">
+        <span id="totalAvg">Daily Average Revenue : ${{overallAvg}}</span><br />
+        <span id="highestDay">Highest Revenue Day (Avg) : {{highestDay}}</span>
+      </div>
+      <h1 id="weeklyTitle">Weekly Average (Cost v Week)</h1>
+      <div id="weekAvgBar">
+       <canvas id="weekBar" class="chart chart-bar" chart-data="graphData.weekAvg.data" chart-labels="graphData.weekAvg.labels" chart-series="graphData.weekAvg.series">
+       </canvas>
+     </div>
+
+     <div id="dayAvgBar">
+       <h1 id="dailyTitle">Daily Average (Cost v Day)</h1>
+       <canvas id="dayAvgBar" class="chart chart-bar" chart-data="graphData.dayAvg.data" chart-labels="graphData.dayAvg.labels" >
+       </canvas>
+     </div>
+   </div>
+
+ </div>
+  <div ng-show="userAlert.shown" id="msgbox">
+    {{userAlert.text}}
+    <button ng-click="userAlert.shown = false" class="button" id="okbtn">Ok</button>
   </div>
 </body>
 </html>

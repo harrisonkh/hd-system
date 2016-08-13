@@ -43,7 +43,7 @@ app.use(express.static(__dirname + '/public'));
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 	extended: true
-})); 
+}));
 
 
 //compare username + password provided compared to the username(s) and password(s) provided in the database
@@ -67,7 +67,7 @@ app.post('/login', function(req,res){
 			}
 		});
 
-	}); 
+	});
 });
 app.get('/',function(req,res){
 	res.sendFile(__dirname + '/login.html');
@@ -82,7 +82,7 @@ app.get('/addcust',function(req,res){
 
 
 	db.serialize(function(){
-		db.run("INSERT INTO Customers (FName, LName, MobNum, Email, LanNum) VALUES ('" + fname + "','" + lname + "','" + mobnum + "','" + email + "','" + landline + "')", 
+		db.run("INSERT INTO Customers (FName, LName, MobNum, Email, LanNum) VALUES ('" + fname + "','" + lname + "','" + mobnum + "','" + email + "','" + landline + "')",
 			function(err){
 				if (!err){
 					res.end('success');
@@ -91,6 +91,30 @@ app.get('/addcust',function(req,res){
 				}
 			});
 	});
+});
+app.get('/editcust',function(req,res){
+  console.log(req);
+  var id = req.query.id;
+  if (id != null){
+    var fname = req.query.fname;
+    var lname =  req.query.lname;
+    var mobnum =  req.query.mobile;
+    var landline =  req.query.landline;
+    var email =  req.query.email;
+
+
+    db.serialize(function(){
+      db.run("UPDATE Customers SET FName=" + fname + ", LName=" + fname + ", MobNum=" + mobnum + ", Email=" + email +
+        ", LanNum=" + landline + "  WHERE id=" + id,
+        function(err){
+          if (!err){
+            res.end('success');
+          }else{
+            console.log(err);
+          }
+        });
+    });
+  }else{res.end('failed');}
 });
 app.get('/query',function(req,res){
 	console.log(req.query, "TEST");
@@ -116,7 +140,7 @@ app.get('/query',function(req,res){
 	}
 	console.log(queryString, queryColumn);
 	//const SQL_STATEMENT = 'SELECT * FROM Customers';
-	if (req.query.qryId !== 'phone'){ 
+	if (req.query.qryId !== 'phone'){
 		const SQL_STATEMENT = 'SELECT * FROM Customers WHERE ' + queryColumn + ' LIKE \'' + queryString +'%\' ORDER BY FName DESC';
 		console.log(SQL_STATEMENT);
 		db.serialize(function(){
@@ -163,7 +187,7 @@ app.get('/addtrans',function(req,res){
 	var date =  req.query.date;
 	var custID =  req.query.custID;
 	db.serialize(function(){
-		db.run("INSERT INTO Transactions (Amount, Date, CustID) VALUES (" + amount + ",'" + date + "','" + custID + "')", 
+		db.run("INSERT INTO Transactions (Amount, Date, CustID) VALUES (" + amount + ",'" + date + "','" + custID + "')",
 			function(err){
 				if (!err){
 					res.end('success');
@@ -193,7 +217,7 @@ app.get('/statistics',function(req,res){
 	}
 
 	const SQL_STATEMENT = 'SELECT * FROM Transactions';
-	
+
 	var dbRows=[];
 	db.serialize(function(){
 		db.each(SQL_STATEMENT, function(err,row){
@@ -226,10 +250,10 @@ app.get('/statistics',function(req,res){
 		});
 	})
 
-	
+
 });
 app.get('/customers',function(req,res){
-	console.log("customers list requested");
+	console.log("Customers list requested");
 	db.serialize(function(){
 		var customers =[];
 		db.each("SELECT * FROM Customers", function(err,row){
@@ -248,7 +272,7 @@ function decrypt(hash,key){
 
 	var decrypted = CryptoJS.AES.decrypt(
 		hash,key,
-		{   
+		{
 			mode: CryptoJS.mode.CBC,
 			padding: CryptoJS.pad.Pkcs7
 		}

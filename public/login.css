@@ -2,14 +2,11 @@
   background-color: #4CAF50; /* Green */
   border: none;
   color: white;
-  padding: 15px 32px;
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
   font-size: 16px;
-  position: absolute;
-  top: 60%;
-  left: 50%;
+  margin: 0;
+  left: 0;
+  position:relative;
 }
 
 .wrapper {
@@ -171,20 +168,25 @@ li h2:hover {
   color: white;
   padding: 15px 32px;
   text-align: center;
+
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
   position: absolute;
-  top: 65%;
-  left: 57.5%;
+  bottom:30px;
+  width:100%;
+  left: 35%;
 }
 
 /*Statistics page elements*/
 #statistics {
-  background-color: grey;
+  background-color: #cfced0;
   border: none;
   color: white;
-  padding: 15% 27.5%;
+  width:80%;
+  padding: 10px 10px;
+
+  margin-right: 15%;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -192,3 +194,93 @@ li h2:hover {
   position: absolute;
   top: 15%;
   left: 10%;
+}
+#weekAvgBar{
+  align-self: center;
+  width:90%;
+  left:5%;
+  margin-top:10%;
+}
+#dayAvgBar{
+  align-self: center;
+  width:90%;
+  left:5%;
+  margin-top:10%;
+}
+#dailyTitle{
+  position:absolute;
+  top:50%;
+}
+#weeklyTitle {
+  top:0;
+  position:absolute;
+}
+h1{
+  color:#f0f0f0;
+}
+#fixedHolder{
+  position:absolute;
+  right:0;
+  padding:10px;
+  background-color: #3f3f3f;
+  top:0;
+  text-align: left;
+}
+#validate{
+  color:red;
+  margin:10px;
+}
+#newCustForm{
+  position:absolute;
+  background-color:#333;
+  width:30%;
+  height:50%;
+  top:25%;
+  left:35%;
+  border-radius: 10px;
+}
+label{
+  display: block;
+  float: left;
+  text-align: left;
+  width : 120px;
+  margin:8px;
+  margin-left: 20px;
+}
+input{
+  padding:5px;
+  margin:5px;
+}
+
+#msgbox{
+  border-radius: 10px;
+  height:20%;
+  width:30%;
+  left:35%;
+  position:absolute;
+  top:35%;
+  background-color: #333;
+  text-align: center;
+  color:#f0f0f0;
+  padding:10px;
+}
+#okbtn{
+  padding:15px;
+  position:absolute;
+  bottom:0;
+  bottom: 10px;
+  width: 20%;
+  left: 40%;
+}
+#cancelcustomer{
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  text-align: center;
+
+  padding:15px;
+  font-size: 16px;
+  position: absolute;
+  bottom:30px;
+  width:100%;
+}
