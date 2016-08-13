@@ -22,6 +22,7 @@ app.controller('mainController', function($scope, $http) {
    'shown': false,
    'text': ''
  }
+
  $scope.recentTransFormatted = function(trans){
    var returnVal = trans["Date"] + ' ' + trans.Amount + ' ' + trans.FName + ' ' ;
    var contactNum = (trans.MobNum != null) ? trans.MobNum:trans.LanNum;
@@ -86,7 +87,7 @@ app.controller('mainController', function($scope, $http) {
   })
   }else{
    document.getElementById('validate').textContent = errorText;
-  }
+ }
 }
 $scope.refreshCustomers = function() {
 	$http.get('/customers')
@@ -95,13 +96,54 @@ $scope.refreshCustomers = function() {
 		console.log($scope.customers);
 	})
 }
-
+$scope.addTransaction = function(amount, date, custID){
+  console.log(amount, date, custID);
+  $http({
+    url: '/addtrans',
+    method: "GET",
+    params: {amount, date,custID }
+  })
+  .then(function(response) {
+    console.log(response);
+     if (response.data === 'success'){
+      $scope.currentView = '';
+      $scope.userAlert.text = "Transaction added successfully!";
+      $scope.userAlert.shown = true;
+    }
+  })
+}
 $scope.refreshRecent = function() {
 	$http.get('/recent')
 	.then(function(response){
-		$scope.recentTrans = response.data.weeklyAvg;
+		$scope.recentTrans = response.data;
 		console.log($scope.recentTrans);
 	});
+}
+$scope.updateCustomer = function(customer){
+  var id = customer.ID;
+  var fname = customer.FName;
+  var lname = customer.LName;
+  var landline = customer.LanNum;
+  var mobile = customer.MobNum;
+  var email = customer.Email;
+  $http({
+   url: '/editcust',
+   method: "GET",
+   params: {id, fname, lname,landline,mobile,email}
+ })
+  .then(function(response) {
+   console.log(response);
+   if (response.data === 'success'){
+    $scope.currentView = '';
+    $scope.userAlert.text = "Customer details updated";
+    $scope.userAlert.shown = true;
+  }
+})
+}
+$scope.editPressed = function(customer){
+  console.log(customer);
+  $scope.editCustomer = customer;
+  $scope.currentView = 'editcust';
 }
 $scope.getStats = function(){
 	console.log('Requesting stats');

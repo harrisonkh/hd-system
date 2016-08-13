@@ -15,7 +15,7 @@ Array.prototype.getAverageField = function(field){
 		for (var i =0; i < this.length;i++){
 			total += this[i][field];
 		}
-		return (total/this.length).toFixed(2);
+		return (total/this.length);
 	}else{
 		return 0;
 	}
@@ -26,7 +26,7 @@ Array.prototype.getAverage = function(){
 		for (var i =0; i < this.length;i++){
 			total += this[i];
 		}
-		return (total/this.length).toFixed(2);
+		return (total/this.length);
 	}else{return 0;}
 }
 Array.prototype.getPosMaxVal = function(){
@@ -34,6 +34,7 @@ Array.prototype.getPosMaxVal = function(){
 	for (var i = 0; i< this.length; i++){
 		if (this[i]>this[maxPos])
 			maxPos = i;
+    console.log('maxpos',maxPos);
 	}
 	return maxPos;
 }
@@ -44,6 +45,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 	extended: true
 }));
+app.use(bodyParser.json());
 
 
 //compare username + password provided compared to the username(s) and password(s) provided in the database
@@ -54,18 +56,17 @@ app.post('/login', function(req,res){
 	console.log(username);
 	console.log(pass);
 
-	res.sendFile(__dirname + "/main.html");
-
 	db.serialize(function() {
 		db.each("SELECT password FROM user WHERE name='" + username + "'", function(err, row) {
-			var dbPass =decrypt(row.Password,SECRET_KEY);
+      if(err)res.end("INCORRECT");
+      var dbPass =decrypt(row.Password,SECRET_KEY);
 			console.log("DB Pass :",dbPass);
 			if (pass == dbPass){
 				res.sendFile(__dirname + "/main.html");
 			}else{
 				res.end("INCORRECT");
 			}
-		});
+		}, function(a,b){if (b!=1){res.end("INCORRECT");}});
 
 	});
 });
@@ -102,10 +103,11 @@ app.get('/editcust',function(req,res){
     var landline =  req.query.landline;
     var email =  req.query.email;
 
-
+    const SQL_STATEMENT= "UPDATE Customers SET FName='" + fname + "', LName='" + lname + "', MobNum='" + mobnum + "', Email='" + email +
+    "', LanNum='" + landline + "' WHERE id=" + id;
+    console.log(SQL_STATEMENT);
     db.serialize(function(){
-      db.run("UPDATE Customers SET FName=" + fname + ", LName=" + fname + ", MobNum=" + mobnum + ", Email=" + email +
-        ", LanNum=" + landline + "  WHERE id=" + id,
+      db.run(SQL_STATEMENT,
         function(err){
           if (!err){
             res.end('success');
@@ -184,8 +186,11 @@ app.get('/query',function(req,res){
 app.get('/addtrans',function(req,res){
 	console.log(req);
 	var amount = req.query.amount;
-	var date =  req.query.date;
+	var date =  formatToAusDate(req.query.date);
 	var custID =  req.query.custID;
+
+
+
 	db.serialize(function(){
 		db.run("INSERT INTO Transactions (Amount, Date, CustID) VALUES (" + amount + ",'" + date + "','" + custID + "')",
 			function(err){
@@ -223,7 +228,7 @@ app.get('/statistics',function(req,res){
 		db.each(SQL_STATEMENT, function(err,row){
 			dbRows.push(row);
 		}, function(){
-			statistics.dailyAverage = dbRows.getAverageField('Amount');
+			statistics.dailyAverage = dbRows.getAverageField('Amount').toFixed(2);
 			var weeklyTrans =[[]];
 			createEmptyArrays(weeklyTrans, 52);
 			for(var i =0; i<dbRows.length; i++){
@@ -234,17 +239,20 @@ app.get('/statistics',function(req,res){
 			for (var i =0; i<weeklyTrans.length; i++){
 				statistics.weeklyAverage.push(weeklyTrans[i].getAverage() == null ? 0 : weeklyTrans[i].getAverage());
 			}
-
+      console.log(statistics.weeklyAverage);
 			var dailyTrans = [[]];
 			createEmptyArrays(dailyTrans, 7);
 			for(var i=0; i<dbRows.length; i++) {
 				var dateFormatted = formatDate(dbRows[i].Date);
+        console.log('Original', dbRows[i].Date, 'Formatted', dateFormatted, 'Day',new Date(dateFormatted).getDay());
 				dailyTrans[ new Date(dateFormatted).getDay() ].push(dbRows[i].Amount);
 			}
 			console.log(dailyTrans);
 			for (var i =0; i<dailyTrans.length; i++){
 				statistics.daysAverageRevenue.push(dailyTrans[i].getAverage() == null ? 0 : dailyTrans[i].getAverage());
 			}
+      console.log(statistics.daysAverageRevenue);
+      console.log('max',statistics.daysAverageRevenue.getPosMaxVal());
 			statistics.dayHighest = DAYS[statistics.daysAverageRevenue.getPosMaxVal()];
 			res.send(statistics);
 		});
@@ -307,27 +315,31 @@ function binarySearch(array, field, value){
 	var found=false;
 	var length = array.length-1;
 	var lastPos;
+  var middlePos;
 	var position = Math.floor(length/2);
 	while (lastPos != position) {
 		if (value < array[position][field]) {
-			lastPos = position;
-			position = Math.floor(position/2);
-		}else if (value > array[position][field])  {
+
+			position = Math.floor((position-lastPos)/2);
+      lastPos = position;
+		}else if (value > array[position][field]){
 			lastPos = position;
 			position = lastPos + Math.floor((length - position)/2);
 		}else if (array[position][field] === (value)){
-			return array[position];
+			return [array[position]];
 		}
+    console.log(lastPos, position);
 	}
 	return [];
 }
 function getWeekOfYear(date){
+  console.log('Getting week', date)
 	var dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
 	var month = date.getMonth();
 	var dayOfMonth = date.getDate();
 
 	var week = Math.floor((dayCount[month]+dayOfMonth)/7);
-
+  console.log('week', week);
 	return week;
 }
 function formatDate(date){
@@ -342,4 +354,11 @@ function createEmptyArrays(array, count){
 	for (var i =0; i<(count); i++){
 		array[i] = [];
 	}
+}
+function formatToAusDate(date){
+  var tmp = new Date(date);
+  return tmp.getDate() + '/' + monthFormatted(tmp.getMonth())  + '/' + tmp.getFullYear();
+}
+function monthFormatted(month){
+   return month+1<=12 ? (month+1):1;
 }

@@ -49,14 +49,11 @@ p {
   background-color: grey;
   border: none;
   color: white;
-  padding: 15% 25%;
+
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  position: absolute;
-  top: 25%;
-  left: 25%;
 }
 
 
@@ -137,14 +134,11 @@ li h2:hover {
   background-color: grey;
   border: none;
   color: white;
-  padding: 10% 27.5%;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  position: absolute;
-  top: 25%;
-  left: 15%;
+
 }
 
 /*Customers page elements*/
@@ -152,14 +146,10 @@ li h2:hover {
   background-color: grey;
   border: none;
   color: white;
-  padding: 15% 27.5%;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  position: absolute;
-  top: 15%;
-  left: 10%;
 }
 
 #submitcustomer {
@@ -183,7 +173,6 @@ li h2:hover {
   background-color: #cfced0;
   border: none;
   color: white;
-  width:80%;
   padding: 10px 10px;
 
   margin-right: 15%;
@@ -191,9 +180,7 @@ li h2:hover {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  position: absolute;
-  top: 15%;
-  left: 10%;
+
 }
 #weekAvgBar{
   align-self: center;
@@ -231,6 +218,24 @@ h1{
   margin:10px;
 }
 #newCustForm{
+  position:absolute;
+  background-color:#333;
+  width:30%;
+  height:50%;
+  top:25%;
+  left:35%;
+  border-radius: 10px;
+}
+#newTransForm{
+  position:absolute;
+  background-color:#333;
+  width:30%;
+  height:50%;
+  top:25%;
+  left:35%;
+  border-radius: 10px;
+}
+#editCustForm{
   position:absolute;
   background-color:#333;
   width:30%;
@@ -283,4 +288,10 @@ input{
   position: absolute;
   bottom:30px;
   width:100%;
+}
+.mainContainer{
+  position: absolute;
+  top: 15%;
+  left:10%;
+  width:80%;
 }

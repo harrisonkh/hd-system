@@ -6,11 +6,9 @@
   <link rel="stylesheet" href="./login.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.bundle.min.js"></script>
   <script src="angular-chart.min.js"></script>
-
-
 </head>
 <body ng-app="hairdresserApp" ng-controller="mainController">
-<title>{{currentPage}}</title>
+  <title>{{currentPage}}</title>
   <!-- nav bar at top of page -->
   <div id="navbar">
     <ul class="navbarItems">
@@ -22,81 +20,159 @@
   </div>
 
   <div id="container">
-    <div id="home" ng-show="currentPage == 'Home'" >
-      <ul>
-        <li ng-repeat="trans in recentTrans">{{recentTransFormatted(trans)}}</li>
-
-
-      </ul>
-
-    </div>
-    <div id="search" ng-show="currentPage=='Search'" >
-      <form id="queryCust" ng-submit="performQuery(queryId, queryText)" method="get">
-        <h1>Query: </h1><input type="text" ng-model=queryText id="{{queryId}}" name="{{queryId}}" title="query">
-        <input type="submit" id="querysubmit" class="button" value="Search">
-        <select ng-model="selectedItem" ng-change="setQueryId(selectedItem)">
-          <option value="fname">First Name</option>
-          <option value="lname">Last Name</option>
-          <option value="phone">Phone Number</option>
-          <option value="email">Email</option>
-        </select>
-      </form>
-      <div id="customerHolder" ng-repeat="customer in searchResults">
-        <span id="customerName">{{customer.Fname}}</span>
+    <div id="home" class="mainContainer" ng-show="currentPage == 'Home'" >
+      <button ng-click="currentView='addtrans'; refreshCustomers()" class='button'>Add Transaction</button>
+      <div id="homeTitle">
+        <h2>
+          <span id="Date">Date</span><span id="Amount">Amount</span><span id="Name">Name</span><span id="Number">Number</span>
+        </h2>
       </div>
 
+      <div id="homeHolder" ng-repeat="trans in recentTrans">
+        <h2>
+          <span id="homeDate">{{trans["Date"]}}</span>
+          <span id="homeAmount">{{trans.Amount}}</span>
+          <span id="homeName">{{trans.FName}}</span>
+          <span id="homeNum">{{trans.MobNum}}</span>
+        </h2>
+      </div>
+      <div id="newTransForm" ng-show="currentView == 'addtrans'">
+        <h2>New Transaction</h2>
+        <form id="newTrans" ng-submit="addTransaction(amount, date, selectedCustomer)" method="get" >
+          <Label>Amount</Label> <input type="number" ng-model="amount">
+          <br/>
+          <Label>Date</Label> <input type="date" ng-model="date">
+          <br/>
+          <Label>Customer</Label><select ng-model="selectedCustomer">
+          <option ng-repeat="customer in customers" value="{{customer.ID}}">{{customer.FName + ' ' + customer.LName}}</option>
+        </select>
+        <span id="validate"></span>
+        <input type="submit" id="submittrans" class="button" value="Add" style="position: relative;top:50px;
+        margin: 0;
+        left: 0;">
+
+      </form>
+      <button type='cancel' id="canceltrans" class="button" ng-click="currentView = ''" value="Cancel" style="bottom:10px;
+      margin: 0;
+      left: 0;">Cancel</button>
     </div>
-    <div id="customers" ng-show="currentPage == 'Customers'">
-      <ul>
-        <li ng-repeat="customer in customers">{{customerFormatted(customer)}}<button>Edit</button></li>
-      </ul>
-      <div id="newCustForm" ng-show="currentView == 'addcust'">
-      <h2>New Customer</h2>
-      <form id="newCust" ng-submit="addCustomer(fname,lname,landline,mobile,email)" method="get" >
-        <Label>First name</Label> <input type="text" ng-model="fname" title="fname">
+  </div>
+
+  <div id="search" class="mainContainer" ng-show="currentPage=='Search'" >
+    <form id="queryCust" ng-submit="performQuery(queryId, queryText)" method="get">
+      <h1>Query: </h1><input type="text" ng-model=queryText id="{{queryId}}" name="{{queryId}}" title="query">
+      <input type="submit" id="querysubmit" class="button" value="Search">
+      <select ng-model="selectedItem" ng-change="setQueryId(selectedItem)">
+        <option value="fname">First Name</option>
+        <option value="lname">Last Name</option>
+        <option value="phone">Phone Number</option>
+        <option value="email">Email</option>
+      </select>
+    </form>
+    <div id="customerSearchHolder">
+      <h2>
+        <span id="CFName">First Name</span><span id="CLName">Last Name</span><span id="CMob">Mobile</span><span id="CLan">Landline</span><span id="CEmail">Email</span>
+      </h2>
+    </div>
+
+    <div id="custHolder" ng-repeat="customer in searchResults">
+      <h2>
+        <span id="custFName">{{customer.FName}}</span>
+        <span id="custLName">{{customer.LName}}</span>
+        <span id="custMobNum">{{customer.MobNum}}</span>
+        <span id="custLanNum">{{customer.LanNum}}</span>
+        <span id="custEmail">{{customer.Email}}</span>
+      </h2>
+    </div>
+  </div>
+  <div id="customers" class="mainContainer" ng-show="currentPage == 'Customers'">
+    <div id="customersTitle">
+      <h2>
+        <span id="CFName">First Name</span><span id="CLName">Last Name</span><span id="CMob">Mobile</span><span id="CLan">Landline</span><span id="CEmail">Email</span>
+      </h2>
+    </div>
+
+    <div id="custHolder" ng-repeat="customer in customers">
+      <h2>
+        <span id="custFName">{{customer.FName}}</span>
+        <span id="custLName">{{customer.LName}}</span>
+        <span id="custMobNum">{{customer.MobNum}}</span>
+        <span id="custLanNum">{{customer.LanNum}}</span>
+        <span id="custEmail">{{customer.Email}}</span>
+      </h2>
+      <button value="{{customer.ID}}" ng-click="editPressed(customer)" id="Edit">Edit</button>
+    </div>
+
+    <div id="editCustForm" ng-show="currentView == 'editcust'">
+      <h2>Edit Customer: {{editCustomer.FName}}</h2>
+      <form id="editCust" ng-submit="updateCustomer(editCustomer)" method="get" >
+        <Label>First name</Label> <input type="text" ng-model="editCustomer.FName" title="fname">
         <br/>
-        <Label>Surname</Label> <input type="text" ng-model="lname" title="lname">
+        <Label>Surname</Label> <input type="text" ng-model="editCustomer.LName" title="lname">
         <br/>
-        <Label>Landline</Label> <input type="text" ng-model="landline" title="landline">
+        <Label>Landline</Label> <input type="text" ng-model="editCustomer.LanNum" title="landline">
         <br/>
-        <Label>Mobile</Label> <input type="text" ng-model="mobile" title="mobile">
+        <Label>Mobile</Label> <input type="text" ng-model="editCustomer.MobNum" title="mobile">
         <br/>
-        <Label>Email</Label> <input type="email" ng-model="email" title="email">
+        <Label>Email</Label> <input type="email" ng-model="editCustomer.Email" title="email">
         <br/>
         <span id="validate"></span>
-         <input type="submit" id="submitcustomer" class="button" value="Add" style="position: relative;top:50px;
-    margin: 0;
-    left: 0;">
-        <button id="cancelcustomer" class="button" ng-click="currentView = ''" value="Cancel" style="bottom:10px;
-    margin: 0;
-    left: 0;">Cancel</button>
+        <input type="submit" id="submitcustomer" class="button" value="Save" style="position: relative;top:50px;
+        margin: 0;
+        left: 0;">
+
       </form>
-      </div>
-      <button ng-show="currentView != 'addcust'" ng-click="currentView = 'addcust'">Add Customer</button>
-    </div>
-
-    <div id="statistics" ng-show="currentPage == 'Statistics'">
-      <div id="fixedHolder">
-        <span id="totalAvg">Daily Average Revenue : ${{overallAvg}}</span><br />
-        <span id="highestDay">Highest Revenue Day (Avg) : {{highestDay}}</span>
-      </div>
-      <h1 id="weeklyTitle">Weekly Average (Cost v Week)</h1>
-      <div id="weekAvgBar">
-       <canvas id="weekBar" class="chart chart-bar" chart-data="graphData.weekAvg.data" chart-labels="graphData.weekAvg.labels" chart-series="graphData.weekAvg.series">
-       </canvas>
-     </div>
-
-     <div id="dayAvgBar">
-       <h1 id="dailyTitle">Daily Average (Cost v Day)</h1>
-       <canvas id="dayAvgBar" class="chart chart-bar" chart-data="graphData.dayAvg.data" chart-labels="graphData.dayAvg.labels" >
-       </canvas>
-     </div>
-   </div>
-
- </div>
-  <div ng-show="userAlert.shown" id="msgbox">
-    {{userAlert.text}}
-    <button ng-click="userAlert.shown = false" class="button" id="okbtn">Ok</button>
+      <button id="cancelcustomer" class="button" ng-click="currentView = ''" value="Cancel" style="bottom:10px;margin: 0;left: 0;">Cancel
+      </button>
   </div>
+
+  <div id="newCustForm" ng-show="currentView == 'addcust'">
+    <h2>New Customer</h2>
+    <form id="newCust" ng-submit="addCustomer(fname,lname,landline,mobile,email)" method="get" >
+      <Label>First name</Label> <input type="text" ng-model="fname" title="fname">
+      <br/>
+      <Label>Surname</Label> <input type="text" ng-model="lname" title="lname">
+      <br/>
+      <Label>Landline</Label> <input type="text" ng-model="landline" title="landline">
+      <br/>
+      <Label>Mobile</Label> <input type="text" ng-model="mobile" title="mobile">
+      <br/>
+      <Label>Email</Label> <input type="email" ng-model="email" title="email">
+      <br/>
+      <span id="validate"></span>
+      <input type="submit" id="submitcustomer" class="button" value="Add" style="position: relative;top:50px;
+      margin: 0;
+      left: 0;">
+      <button id="cancelcustomer" class="button" ng-click="currentView = ''" value="Cancel" style="bottom:10px;
+      margin: 0;
+      left: 0;">Cancel</button>
+    </form>
+  </div>
+  <button ng-show="currentView != 'addcust'" ng-click="currentView = 'addcust'">Add Customer</button>
+</div>
+
+<div id="statistics" class="mainContainer" ng-show="currentPage == 'Statistics'">
+  <div id="fixedHolder">
+    <span id="totalAvg">Daily Average Revenue : ${{overallAvg}}</span><br />
+    <span id="highestDay">Highest Revenue Day (Avg) : {{highestDay}}</span>
+  </div>
+  <h1 id="weeklyTitle">Weekly Average (Cost v Week)</h1>
+  <div id="weekAvgBar">
+   <canvas id="weekBar" class="chart chart-bar" chart-data="graphData.weekAvg.data" chart-labels="graphData.weekAvg.labels" chart-series="graphData.weekAvg.series">
+   </canvas>
+ </div>
+
+ <div id="dayAvgBar">
+   <h1 id="dailyTitle">Daily Average (Cost v Day)</h1>
+   <canvas id="dayAvgBar" class="chart chart-bar" chart-data="graphData.dayAvg.data" chart-labels="graphData.dayAvg.labels" >
+   </canvas>
+ </div>
+</div>
+
+</div>
+<div ng-show="userAlert.shown" id="msgbox">
+  {{userAlert.text}}
+  <button ng-click="userAlert.shown = false" class="button" id="okbtn">Ok</button>
+</div>
 </body>
 </html>
