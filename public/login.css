@@ -51,6 +51,7 @@ p {
   background-color: grey;
   border: none;
   color: white;
+  width:30em;
   padding: 15% 25%;
   text-align: center;
   text-decoration: none;
@@ -106,6 +107,12 @@ p {
     position: absolute;
     top: 30%;
     left: 25%;
+  }
+
+  #customerSearchHolder {
+    position: absolute;
+    top: 22%;
+    left: 38%;
   }
 
   /*Navbar elements*/
