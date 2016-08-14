@@ -184,19 +184,17 @@ p {
   }
 
   #cancelNcustomer {
-    position: relative;top:80px;
-    margin: 0;
-    left: 0;
     background-color: #4CAF50; /* Green */
     border: none;
     color: white;
-    padding: 15px 32px;
     text-align: center;
-    width:100%;
 
-    text-decoration: none;
-    display: inline-block;
+    padding:1em;
     font-size: 16px;
+    position: absolute;
+    top:21em;
+    width:100%;
+    left:0%;
   }
 
   #addcustomer {
@@ -328,7 +326,7 @@ p {
     padding:1em;
     font-size: 16px;
     position: absolute;
-    top:24.5em;
+    top:21em;
     width:100%;
     left:0%;
   }
