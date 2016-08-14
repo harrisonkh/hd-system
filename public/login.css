@@ -3,10 +3,12 @@
   border: none;
   color: white;
   text-align: center;
-  font-size: 16px;
+  font-size: 150%;
   margin: 0;
   left: 0;
-  position:relative;
+  position: absolute;
+  top: 80%;
+  left: 80%;
 }
 
 .wrapper {
@@ -23,13 +25,13 @@ p {
   text-align:center;
   position: absolute;
   top: 40%;
-  left: 34.6%;
+  left: 34.3%;
 }
 
 .password{
   text-align:center;
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 35%;
 }
 
@@ -49,249 +51,288 @@ p {
   background-color: grey;
   border: none;
   color: white;
-
+  padding: 15% 25%;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-}
-
-
-#querysubmit {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  padding: 6% 12%;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 30px;
   position: absolute;
-  top: 50%;
-  left: 30%;
-}
+  top: 25%;
+  left: 0%;}
 
-#search input[type=text] {
-  width: 60%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
-  border: none;
-  background-color: #3CBC8D;
-  color: white;
-  position: absolute;
-  top: 30%;
-  left: 2%;
-}
 
-h1 {
-  font-size: 300%;
-  position: absolute;
-  top: 15%;
-  left: 2%;
-}
+  #querysubmit {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 3% 6%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 200%;
+    position: absolute;
+    top: 50%;
+    left: 5%;
+  }
 
-#search select {
-  width: 30%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
-  border: none;
-  background-color: #3CBC8D;
-  color: white;
-  position: absolute;
-  top: 30%;
-  left: 70%;
-}
+  #search input[type=text] {
+    width: 20%;
+    padding: 1em 2em;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: none;
+    background-color: #3CBC8D;
+    color: white;
+    position: absolute;
+    top: 30%;
+    left: 2%;
+  }
 
-/*Navbar elements*/
-.navbarItems {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
-}
+  h1 {
+    font-size: 300%;
+    position: absolute;
+    top: 15%;
+    left: 2%;
+  }
 
-.navbarItems li {
-  float: left;
-}
+  #search select {
+    width: 10%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: none;
+    background-color: #3CBC8D;
+    color: white;
+    position: absolute;
+    top: 30%;
+    left: 25%;
+  }
 
-li h2 {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
+  /*Navbar elements*/
+  .navbarItems {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+  }
 
-li h2:hover {
-  background-color: #111;
-}
+  .navbarItems li {
+    float: left;
+  }
 
-/*Home page elements*/
-#home {
-  background-color: grey;
-  border: none;
-  color: white;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
+  li h2 {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
 
-}
+  li h2:hover {
+    background-color: #111;
+  }
 
-/*Customers page elements*/
-#customers {
-  background-color: grey;
-  border: none;
-  color: white;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-}
+  /*Home page elements*/
+  #home {
+    background-color: grey;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
 
-#submitcustomer {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
+  }
 
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  position: absolute;
-  bottom:30px;
-  width:100%;
-  left: 35%;
-}
+  /*Customers page elements*/
+  #customers {
+    background-color: grey;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
 
-/*Statistics page elements*/
-#statistics {
-  background-color: #cfced0;
-  border: none;
-  color: white;
-  padding: 10px 10px;
+  #submitcustomer {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
 
-  margin-right: 15%;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    position: absolute;
+    bottom:30px;
+    width:100%;
+    left: 35%;
+  }
 
-}
-#weekAvgBar{
-  align-self: center;
-  width:90%;
-  left:5%;
-  margin-top:10%;
-}
-#dayAvgBar{
-  align-self: center;
-  width:90%;
-  left:5%;
-  margin-top:10%;
-}
-#dailyTitle{
-  position:absolute;
-  top:50%;
-}
-#weeklyTitle {
-  top:0;
-  position:absolute;
-}
-h1{
-  color:#f0f0f0;
-}
-#fixedHolder{
-  position:absolute;
-  right:0;
-  padding:10px;
-  background-color: #3f3f3f;
-  top:0;
-  text-align: left;
-}
-#validate{
-  color:red;
-  margin:10px;
-}
-#newCustForm{
-  position:absolute;
-  background-color:#333;
-  width:30%;
-  height:50%;
-  top:25%;
-  left:35%;
-  border-radius: 10px;
-}
-#newTransForm{
-  position:absolute;
-  background-color:#333;
-  width:30%;
-  height:50%;
-  top:25%;
-  left:35%;
-  border-radius: 10px;
-}
-#editCustForm{
-  position:absolute;
-  background-color:#333;
-  width:30%;
-  height:50%;
-  top:25%;
-  left:35%;
-  border-radius: 10px;
-}
-label{
-  display: block;
-  float: left;
-  text-align: left;
-  width : 120px;
-  margin:8px;
-  margin-left: 20px;
-}
-input{
-  padding:5px;
-  margin:5px;
-}
+  #Edit {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
 
-#msgbox{
-  border-radius: 10px;
-  height:20%;
-  width:30%;
-  left:35%;
-  position:absolute;
-  top:35%;
-  background-color: #333;
-  text-align: center;
-  color:#f0f0f0;
-  padding:10px;
-}
-#okbtn{
-  padding:15px;
-  position:absolute;
-  bottom:0;
-  bottom: 10px;
-  width: 20%;
-  left: 40%;
-}
-#cancelcustomer{
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  text-align: center;
+  #cancelNcustomer {
+    position: relative;top:80px;
+    margin: 0;
+    left: 0;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
 
-  padding:15px;
-  font-size: 16px;
-  position: absolute;
-  bottom:30px;
-  width:100%;
-}
-.mainContainer{
-  position: absolute;
-  top: 15%;
-  left:10%;
-  width:80%;
-}
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+
+  #addcustomer {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+
+  /*Statistics page elements*/
+  #statistics {
+    background-color: #cfced0;
+    border: none;
+    color: white;
+    padding: 10px 10px;
+
+    margin-right: 15%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+
+  }
+  #weekAvgBar{
+    align-self: center;
+    width:90%;
+    left:5%;
+    margin-top:10%;
+  }
+  #dayAvgBar{
+    align-self: center;
+    width:90%;
+    left:5%;
+    margin-top:10%;
+  }
+  #dailyTitle{
+    position:absolute;
+    top:50%;
+  }
+  #weeklyTitle {
+    top:0;
+    position:absolute;
+  }
+  h1{
+    color:#f0f0f0;
+  }
+  #fixedHolder{
+    position:absolute;
+    right:0;
+    padding:10px;
+    background-color: #3f3f3f;
+    top:0;
+    text-align: left;
+  }
+  #validate{
+    color:red;
+    margin:10px;
+  }
+  #newCustForm{
+    position:absolute;
+    background-color:#333;
+    width:30%;
+    height:50%;
+    top:25%;
+    left:35%;
+    border-radius: 10px;
+  }
+  #newTransForm{
+    position:absolute;
+    background-color:#333;
+    width:30%;
+    height:50%;
+    top:25%;
+    left:35%;
+    border-radius: 10px;
+  }
+  #editCustForm{
+    position:absolute;
+    background-color:#333;
+    width:30%;
+    height:50%;
+    top:25%;
+    left:35%;
+    border-radius: 10px;
+  }
+  label{
+    display: block;
+    float: left;
+    text-align: left;
+    width : 120px;
+    margin:8px;
+    margin-left: 20px;
+  }
+  input{
+    padding:5px;
+    margin:5px;
+  }
+
+  #msgbox{
+    border-radius: 10px;
+    height:20%;
+    width:30%;
+    left:35%;
+    position:absolute;
+    top:35%;
+    background-color: #333;
+    text-align: center;
+    color:#f0f0f0;
+    padding:10px;
+  }
+  #okbtn{
+    padding:15px;
+    position:absolute;
+    bottom:0;
+    bottom: 10px;
+    width: 20%;
+    left: 40%;
+  }
+  #cancelcustomer{
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+
+    padding:15px;
+    font-size: 16px;
+    position: absolute;
+    bottom:30px;
+    width:100%;
+  }
+  .mainContainer{
+    position: absolute;
+    top: 15%;
+    left:10%;
+    width:80%;
+  }

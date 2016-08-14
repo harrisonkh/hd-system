@@ -24,7 +24,7 @@
       <button ng-click="currentView='addtrans'; refreshCustomers()" class='button'>Add Transaction</button>
       <div id="homeTitle">
         <h2>
-          <span id="Date">Date</span><span id="Amount">Amount</span><span id="Name">Name</span><span id="Number">Number</span>
+          <span id="Date">Date/</span><span id="Amount">Amount/</span><span id="Name">Name/</span><span id="Number">Number</span>
         </h2>
       </div>
 
@@ -52,7 +52,7 @@
         left: 0;">
 
       </form>
-      <button type='cancel' id="canceltrans" class="button" ng-click="currentView = ''" value="Cancel" style="bottom:10px;
+      <button type='cancel' id="canceltrans" class="button" ng-click="currentView = ''" value="Cancel" style="bottom: -1.5em;
       margin: 0;
       left: 0;">Cancel</button>
     </div>
@@ -69,13 +69,14 @@
         <option value="email">Email</option>
       </select>
     </form>
-    <div id="customerSearchHolder">
+        <div id="customerSearchHolder">
       <h2>
-        <span id="CFName">First Name</span><span id="CLName">Last Name</span><span id="CMob">Mobile</span><span id="CLan">Landline</span><span id="CEmail">Email</span>
+        <span id="CFName">First Name/</span><span id="CLName">Last Name/</span><span id="CMob">Mobile/</span><span id="CLan">Landline/</span><span id="CEmail">Email</span>
       </h2>
     </div>
 
     <div id="custHolder" ng-repeat="customer in searchResults">
+
       <h2>
         <span id="custFName">{{customer.FName}}</span>
         <span id="custLName">{{customer.LName}}</span>
@@ -88,7 +89,7 @@
   <div id="customers" class="mainContainer" ng-show="currentPage == 'Customers'">
     <div id="customersTitle">
       <h2>
-        <span id="CFName">First Name</span><span id="CLName">Last Name</span><span id="CMob">Mobile</span><span id="CLan">Landline</span><span id="CEmail">Email</span>
+        <span id="CFName">First Name/</span><span id="CLName">Last Name/</span><span id="CMob">Mobile/</span><span id="CLan">Landline/</span><span id="CEmail">Email</span>
       </h2>
     </div>
 
@@ -122,7 +123,7 @@
         left: 0;">
 
       </form>
-      <button id="cancelcustomer" class="button" ng-click="currentView = ''" value="Cancel" style="bottom:10px;margin: 0;left: 0;">Cancel
+      <button id="cancelcustomer" class="button" ng-click="currentView = ''" value="Cancel" style="bottom:490px;margin: 0;left: 0;">Cancel
       </button>
   </div>
 
@@ -143,12 +144,11 @@
       <input type="submit" id="submitcustomer" class="button" value="Add" style="position: relative;top:50px;
       margin: 0;
       left: 0;">
-      <button id="cancelcustomer" class="button" ng-click="currentView = ''" value="Cancel" style="bottom:10px;
-      margin: 0;
-      left: 0;">Cancel</button>
+      <button id="cancelNcustomer" class="button" ng-click="currentView = ''" value="Cancel">Cancel</button>
     </form>
   </div>
-  <button ng-show="currentView != 'addcust'" ng-click="currentView = 'addcust'">Add Customer</button>
+  <br/>
+  <button id="addcustomer" ng-show="currentView != 'addcust'" ng-click="currentView = 'addcust'">Add Customer</button>
 </div>
 
 <div id="statistics" class="mainContainer" ng-show="currentPage == 'Statistics'">
