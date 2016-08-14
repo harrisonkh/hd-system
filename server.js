@@ -64,9 +64,9 @@ app.post('/login', function(req,res){
 			if (pass == dbPass){
 				res.sendFile(__dirname + "/main.html");
 			}else{
-				res.end("INCORRECT");
+				res.sendFile(__dirname + "/incorrect.html");
 			}
-		}, function(a,b){if (b!=1){res.end("INCORRECT");}});
+		}, function(a,b){if (b!=1){res.sendFile(__dirname + "/incorrect.html");}});
 
 	});
 });
